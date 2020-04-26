@@ -9,4 +9,6 @@ import com.vaadin.flow.server.PWA;
  */
 @PWA(name = "Project Base for Vaadin with Spring", shortName = "Project Base", enableInstallPrompt = false)
 public class AppShell implements AppShellConfigurator {
+
+	private static final long serialVersionUID = 1L;
 }
