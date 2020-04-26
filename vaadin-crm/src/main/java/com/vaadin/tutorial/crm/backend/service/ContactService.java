@@ -35,6 +35,7 @@ public class ContactService {
 		} else {
 			return contactRepository.search(stringFilter);
 		}
+	}
 
 	public long count() {
 		return contactRepository.count();
