@@ -11,9 +11,8 @@ stages {
     stage('Build Image') {
         steps{
             script {
-			sh "docker build -t $registry:${env.BUILD_ID} ./vaadin-crm"
-			sh "docker tag $registry:${env.BUILD_ID} $registry:latest"
-			sh 'docker-compose up -d'
+                dockerImage = docker.build(registry + ":$BUILD_NUMBER" , "./vaadin-crm")
+                dockerImage.tag(registry + ":$BUILD_NUMBER" , registry + ":latest")
             }
         }
     }
@@ -22,9 +21,9 @@ stages {
    stage('PUSH image to Docker Hub') {
 	    steps {
 	        script{
-		        docker.withRegistry('', registryCredential) {
-				 sh "docker push $registry/vaadin-crm:${env.BUILD_ID}"
-				 sh "docker push $registry/vaadin-crm:latest"
+		        docker.withRegistry(registry+'/vaadin-crm', registryCredential) {
+		        dockerImage.push("${env.BUILD_NUMBER}")
+                dockerImage.push("latest")
 		        }
 	        }
 		
@@ -35,7 +34,7 @@ stages {
 	stage('Remove Unused docker image') {
         steps{
             script{
-            sh "docker rmi $registry$BUILD_NUMBER"
+            docker.rmi(registry+":$BUILD_NUMBER")
             }
         }
     }
