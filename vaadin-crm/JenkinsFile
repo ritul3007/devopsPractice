@@ -1,17 +1,20 @@
 pipeline {
 agent any
-def app
+environment {
+    registry = "ritul3007/devops_practice"
+    registryCredential = 'docker-hub'
+    dockerImage = ''
+  }
 stages {
     stage('SCM Checkout')
     {
         steps {
-        checkout scm
+         git 'https://github.com/ritul3007/devopsPractice.git'
         }
     }
 
     stage('Maven Build')
     {
-        agent{ docker 'maven:3-alpine'}
         steps {
          sh 'mvn clean install' 
         }
@@ -20,19 +23,17 @@ stages {
     
     stage('Build Image')
     {
-        agent{
-            dockerFile{
-                filename 'vaadin-crm'
-                dir  'ritul3007/devops_practice'
-                label 'build vaadin-crm image'
-            }
+        steps{
+        script {
+          dockerImage = docker.build registry + ":$BUILD_NUMBER"
         }
+      }
         
     }
 	
 	stage('Test Image'){
 	steps{
-	app.inside {
+	dockerImage.inside {
 	
 				echo "test passed"
 	            
@@ -44,13 +45,20 @@ stages {
     stage('PUSH image to Docker Hub')
     {
 	steps{
-		docker.withRegistry('https://registry.hub.docker.com', 'docker-hub') {
-		app.push("${env.BUILD_NUMBER}")
-		app.push("latest")
+	script{
+		docker.withRegistry('', registryCredential) {
+		dockerImage.push("${env.BUILD_NUMBER}")
+		}
 		}
 		
 		echo "Trying to Push Docker Image"
     }
+    }
+	
+	stage('Remove Unused docker image') {
+      steps{
+        sh "docker rmi $registry:$BUILD_NUMBER"
+      }
     }
 	} 	 	
 }
