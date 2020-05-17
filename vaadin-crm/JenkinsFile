@@ -8,7 +8,7 @@ def app
     
     stage('Build Image')
     {
-        app = dcoker.build("ritul3007/devops_practice:docker-vaadin-crm")
+        app = docker.build("ritul3007/devops_practice:docker-vaadin-crm")
     }
 	
 	stage('Test Image'){
@@ -24,7 +24,7 @@ def app
     stage('PUSH image to Docker Hub')
     {
 	
-		docker.withRegistry("https://registry.hub.docker.com", docker-hub) {
+		docker.withRegistry('https://registry.hub.docker.com', 'docker-hub') {
 		app.push("${env.BUILD_NUMBER}")
 		app.push("docker-vaadin-crm")
 		}
