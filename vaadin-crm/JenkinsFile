@@ -4,45 +4,53 @@ def app
 stages {
     stage('SCM Checkout')
     {
+        steps {
         checkout scm
+        }
     }
 
     stage('Maven Build')
     {
+        agent{ docker 'maven:3-alpine'}
         steps {
          sh 'mvn clean install' 
         }
-        post {
-                success {
-                    stage('Build Image')
-                }
-            }
+        
     }
     
     stage('Build Image')
     {
-        app = docker.build("ritul3007/devops_practice","./vaadin-crm")
+        agent{
+            dockerFile{
+                filename 'vaadin-crm'
+                dir  'ritul3007/devops_practice'
+                label 'build vaadin-crm image'
+            }
+        }
+        
     }
 	
 	stage('Test Image'){
-	
+	steps{
 	app.inside {
 	
 				echo "test passed"
-	            stage('PUSH image to Docker Hub')
+	            
 				}
+    }
 		
 	}
 	
     stage('PUSH image to Docker Hub')
     {
-	
+	steps{
 		docker.withRegistry('https://registry.hub.docker.com', 'docker-hub') {
 		app.push("${env.BUILD_NUMBER}")
 		app.push("latest")
 		}
 		
 		echo "Trying to Push Docker Image"
+    }
     }
 	} 	 	
 }
