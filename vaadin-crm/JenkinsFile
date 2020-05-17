@@ -1,6 +1,7 @@
-node{
-
+pipeline {
+agent any
 def app
+stages {
     stage('SCM Checkout')
     {
         checkout scm
@@ -8,7 +9,14 @@ def app
 
     stage('Maven Build')
     {
+        steps {
          sh 'mvn clean install' 
+        }
+        post {
+                success {
+                    stage('Build Image')
+                }
+            }
     }
     
     stage('Build Image')
@@ -21,7 +29,7 @@ def app
 	app.inside {
 	
 				echo "test passed"
-	
+	            stage('PUSH image to Docker Hub')
 				}
 		
 	}
@@ -36,4 +44,5 @@ def app
 		
 		echo "Trying to Push Docker Image"
     }
+	} 	 	
 }
