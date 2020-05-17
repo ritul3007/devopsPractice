@@ -1,0 +1,34 @@
+node{
+
+def app
+    stage('SCM Checkout')
+    {
+        checkout scm
+    }
+    
+    stage('Build Image')
+    {
+        app = dcoker.build("ritul3007/devops_practice:docker-vaadin-crm")
+    }
+	
+	stage('Test Image'){
+	
+	app.inside {
+	
+				echo "test passed"
+	
+				}
+		
+	}
+	
+    stage('PUSH image to Docker Hub')
+    {
+	
+		docker.withRegistry("https://registry.hub.docker.com", docker-hub) {
+		app.push("${env.BUILD_NUMBER}")
+		app.push("docker-vaadin-crm")
+		}
+		
+		echo "Trying to Push Docker Image"
+    }
+}
