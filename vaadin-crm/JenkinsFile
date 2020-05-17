@@ -17,11 +17,12 @@ stages {
     }
 	
 	
-    stage('PUSH image to Docker Hub') {
+   stage('PUSH image to Docker Hub') {
 	    steps {
 	        script{
 		        docker.withRegistry('', registryCredential) {
-		        dockerImage.push("${env.BUILD_NUMBER}")
+		        dockerImage.push("/vaadin-crm:${env.BUILD_NUMBER}")
+                dockerImage.push("/vaadin-crm:latest")
 		        }
 	        }
 		
@@ -31,7 +32,9 @@ stages {
 	
 	stage('Remove Unused docker image') {
         steps{
-            sh "docker rmi $registry:$BUILD_NUMBER"
+            script{
+            sh "docker rmi $registry/vaadin-crm:$BUILD_NUMBER"
+            }
         }
     }
   } 	 	
