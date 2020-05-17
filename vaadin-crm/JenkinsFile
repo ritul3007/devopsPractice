@@ -20,7 +20,7 @@ stages {
    stage('PUSH image to Docker Hub') {
 	    steps {
 	        script{
-		        docker.withRegistry('', registryCredential) {
+		        docker.withRegistry(registry+'/vaadin-crm', registryCredential) {
 		        dockerImage.push("${env.BUILD_NUMBER}")
                 dockerImage.push("latest")
 		        }
