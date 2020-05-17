@@ -21,8 +21,8 @@ stages {
 	    steps {
 	        script{
 		        docker.withRegistry('', registryCredential) {
-		        dockerImage.push("/vaadin-crm:${env.BUILD_NUMBER}")
-                dockerImage.push("/vaadin-crm:latest")
+		        dockerImage.push("/vaadin-crm"+"${env.BUILD_NUMBER}")
+                dockerImage.push("latest")
 		        }
 	        }
 		
