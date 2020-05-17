@@ -5,6 +5,9 @@ environment {
     registryCredential = 'docker-hub'
     dockerImage = ''
   }
+   tools {
+    maven 'mvn-3.6.3'
+  }
 stages {
     stage('SCM Checkout') {
         steps {
@@ -13,12 +16,10 @@ stages {
     }
 
     stage('Maven Build') {
-        steps {
-             echo "PATH = ${PATH}"
-             echo "MAVEN_HOME = ${MAVEN_HOME}"
-             sh 'mvn clean install' 
+         steps {
+                sh 'mvn clean install' 
+            }
         }
-    }
     
     stage('Build Image') {
         steps{
