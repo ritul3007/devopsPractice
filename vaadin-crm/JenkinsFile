@@ -16,15 +16,6 @@ stages {
         }
     }
 	
-	stage('Test Image') {
-	    steps {
-            script {
-	            dockerImage.inside {
-				echo "test passed"
-				}
-            }
-        }
-	}
 	
     stage('PUSH image to Docker Hub') {
 	    steps {
