@@ -5,22 +5,9 @@ environment {
     registryCredential = 'docker-hub'
     dockerImage = ''
   }
-   tools {
-    maven 'mvn-3.6.3'
-  }
+   
 stages {
-    stage('SCM Checkout') {
-        steps {
-            git 'https://github.com/ritul3007/devopsPractice.git'
-        }
-    }
-
-    stage('Maven Build') {
-         steps {
-                sh 'mvn clean install' 
-            }
-        }
-    
+       
     stage('Build Image') {
         steps{
             script {
