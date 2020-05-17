@@ -21,7 +21,7 @@ stages {
 	    steps {
 	        script{
 		        docker.withRegistry('', registryCredential) {
-		        dockerImage.push("/vaadin-crm"+"${env.BUILD_NUMBER}")
+		        dockerImage.push("${env.BUILD_NUMBER}")
                 dockerImage.push("latest")
 		        }
 	        }
@@ -33,7 +33,7 @@ stages {
 	stage('Remove Unused docker image') {
         steps{
             script{
-            sh "docker rmi $registry/vaadin-crm:$BUILD_NUMBER"
+            sh "docker rmi $registry$BUILD_NUMBER"
             }
         }
     }
