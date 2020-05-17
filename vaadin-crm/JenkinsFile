@@ -1,10 +1,6 @@
 node{
 
 def app
-    stage('SCM Checkout')
-    {
-        checkout scm
-    }
     
     stage('Build Image')
     {
